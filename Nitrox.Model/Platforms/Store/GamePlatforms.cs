@@ -9,6 +9,7 @@ public static class GamePlatforms
 {
     private static readonly Dictionary<GameLibraries, IGamePlatform> allPlatforms = new()
     {
+        { GameLibraries.GOLDBERG, new Goldberg() },
         { GameLibraries.STEAM, new Steam() },
         { GameLibraries.EPIC, new EpicGames() },
         { GameLibraries.HEROIC, new HeroicGames() },

@@ -41,9 +41,14 @@ public enum GameLibraries
     DISCORD = 1 << 6,
 
     /// <summary>
+    /// Goldberg
+    /// </summary>
+    GOLDBERG = 1 << 7,
+
+    /// <summary>
     /// Related to an official game platform
     /// </summary>
-    PLATFORMS = STEAM | EPIC | HEROIC | MICROSOFT | DISCORD,
+    PLATFORMS = STEAM | EPIC | HEROIC | MICROSOFT | DISCORD | GOLDBERG,
 
     /// <summary>
     /// Related to an external provider source

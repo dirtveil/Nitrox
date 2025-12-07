@@ -146,7 +146,7 @@ public static class NitroxUser
     public static void SetGamePathAndPlatform(string path, IGamePlatform? platform)
     {
         gamePath = Path.GetFullPath(path);
-        GamePlatform = new Nitrox.Model.Platforms.Store.Standalone();
+        GamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
     }
 
     public static string? ExecutableRootPath

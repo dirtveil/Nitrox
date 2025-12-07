@@ -45,6 +45,7 @@ public static class GameInstallationFinder
                     HeroicGames => GameLibraries.HEROIC,
                     MSStore => GameLibraries.MICROSOFT,
                     Discord => GameLibraries.DISCORD,
+                    Goldberg => GameLibraries.GOLDBERG,
                     _ => throw new ArgumentOutOfRangeException()
                 }
             };
