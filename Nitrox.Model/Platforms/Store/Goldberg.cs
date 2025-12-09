@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Nitrox.Model.Helper;
@@ -20,7 +21,6 @@ public sealed class Goldberg : IGamePlatform
         }
         
         //similarly to steam, find steam_api64.dll
-        //if found, check for steam_settings directory
         string plugins = Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins");
         string dllPath1 = Path.Combine(plugins, "x86_64", "steam_api64.dll");
         string dllPath2 = Path.Combine(plugins, "steam_api64.dll");
@@ -42,7 +42,35 @@ public sealed class Goldberg : IGamePlatform
 
         string dllDir = Path.GetDirectoryName(foundDll) ?? plugins;
         string steamSettings = Path.Combine(dllDir, "steam_settings");
-        return Directory.Exists(steamSettings);
+        if (Directory.Exists(steamSettings))
+        {
+            // steam_settings folder is a clear indicator for configured GSE
+            Log.Debug("Goldberg detected via steam_settings folder");
+            return true;
+        }
+
+        // check if DLL is not the standard Steam one
+        // there shouldn't be ANY false positives here unless the GSE dll is disguised as the steam one (unlikely)
+        // however, results cannot be guaranteed(?) it's just EXTREMELY likely that it will work right
+        try
+        {
+            FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(foundDll);
+            if (versionInfo != null)
+            {
+                string productName = (versionInfo.ProductName ?? string.Empty).Trim();
+                if (productName != "Steam Client API")
+                {
+                    Log.Debug($"Goldberg detected via steam_api64.dll product name: {productName}");
+                    return true;
+                }
+            }
+        }
+        catch
+        {
+            // if inspection fails, assume not GSE
+        }
+
+        return false;
     }
 
     public static async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments)
